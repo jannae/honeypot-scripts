@@ -1,4 +1,3 @@
-kippo-scripts
-=============
+# Honeypot Management Scripts
 
-Miscellaneous scripts for Kippo SSH honeypot
+A collection of scripts for my honeypot project
