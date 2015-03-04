@@ -1,7 +1,7 @@
-honeypot-setup-script
+Setup Script
 =====================
 
-A script to install and deploy a honeypot automatically and without user interaction. 
+A script to install and deploy a honeypot automatically and without user interaction.
 
 Currently installs and sets up:
 
@@ -10,7 +10,7 @@ Currently installs and sets up:
 * p0f
 
 
-These will all be installed as system services so running this script once should turn a vanilla install in to a robust honeypot. Aims to use useful _and secure_ defaults. 
+These will all be installed as system services so running this script once should turn a vanilla install in to a robust honeypot. Aims to use useful _and secure_ defaults.
 
 Currently tested on **Ubuntu 12.04**
 
@@ -22,12 +22,12 @@ Usage
 
 Only run this if you **know what you are doing**.
 
-    wget -q https://raw.github.com/andrewmichaelsmith/honeypot-setup-script/master/setup.bash -O /tmp/setup.bash && bash /tmp/setup.bash
+    wget -q https://raw.github.com/andrewmichaelsmith$script_dirmaster/setup.bash -O /tmp/setup.bash && bash /tmp/setup.bash
 
 Effects
 ---------------------
 
-* Moves SSH server from port 22 to 65534
+* Moves SSH server from port 22 to 54321
 * Installs [Dionaea](http://dionaea.carnivore.it/), [Kippo](https://github.com/desaster/kippo), [p0f](http://lcamtuf.coredump.cx/p0f3/#/)
 * Sets up Dionaea, Kippo and p0f as system services that run on startup
 
