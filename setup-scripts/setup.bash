@@ -123,7 +123,6 @@ sudo update-rc.d dionaea defaults
 sudo update-rc.d kippo defaults
 
 #start the honeypot software
-sudo /etc/init.d/kippo start
 sudo /etc/init.d/p0f start
 sudo /etc/init.d/dionaea start
-
+sudo /etc/init.d/kippo start
