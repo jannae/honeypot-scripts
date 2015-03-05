@@ -1,7 +1,7 @@
 ### BEGIN INIT INFO
 # Provides:          p0f
 # Required-Start:    $all
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: p0f
@@ -20,7 +20,7 @@ DAEMON=/usr/sbin/p0f
 # pid file for the daemon
 PIDFILE=/var/run/p0f.pid
 
-PARAMETERS="-u root -i %%IFACE%% -Q /tmp/p0f.sock -q -l -d -o /var/p0f/p0f.log"
+PARAMETERS="-u root -i eth0 -Q /tmp/p0f.sock -q -l -d -o /var/p0f/p0f.log"
 
 # If the daemon is not there, then exit.
 test -x $DAEMON || exit 5
