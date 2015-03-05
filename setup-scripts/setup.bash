@@ -1,26 +1,19 @@
 #!/bin/bash
-script_dir="setup-scripts"
-wget_url="https://raw.githubusercontent.com/jannae/honeypot-scripts/master"
+repo_dir="honeypot-scripts"
+script_dir="honeypot-scripts/setup-scripts"
 
-if [ -d "$script_dir" ];
-then
-    cp /$script_dir/scripts/iface-choice.py /tmp/iface-choice.py
-else
-    sudo wget $wget_url/$script_dir/scripts/iface-choice.py -O /tmp/iface-choice.py
-fi
+# Get updated
+echo '[apt-get] Getting up to date'
+sudo apt-get update &> /dev/null
+sudo apt-get upgrade -y &> /dev/null
 
-if [ -d "$script_dir" ];
-then
-    mkdir /etc/dionaea
-    cp /$script_dir/templates/dionaea.conf.tmpl /etc/dionaea/dionaea.conf
+echo 'Getting all the files arranged...'
+sudo mkdir /etc/dionaea
+sudo cp ~/$script_dir/templates/dionaea.conf.tmpl /etc/dionaea/dionaea.conf
+echo '[copied] /etc/dionaea/dionaea.conf'
+sudo cp ~/$script_dir/templates/kippo.cfg.tmpl /tmp/kippo.cfg
+echo '[copied] /tmp/kippo.cfg'
 
-    cp /$script_dir/templates/kippo.cfg.tmpl /tmp/kippo.cfg
-else
-    sudo mkdir /etc/dionaea
-    sudo wget $wget_url/$script_dir/templates/dionaea.conf.tmpl -O /etc/dionaea/dionaea.conf
-
-    sudo wget $wget_url/$script_dir/templates/kippo.cfg.tmpl -O /tmp/kippo.cfg
-fi
 
 if [ $(dpkg-query -W -f='${Status}' sudo 2>/dev/null | grep -c "ok installed") -eq 0 ]
 then
@@ -37,23 +30,11 @@ then
    exit 1
 fi
 
-
-# update apt repositories
-echo '[apt-get] Update on current repositories'
-sudo apt-get update &> /dev/null
-
-#user iface choice
 echo '[apt-get] Installing python-pip gcc python-dev'
-sudo apt-get update &> /dev/null
 sudo apt-get -y install python-pip gcc python-dev &> /dev/null
-sudo pip install netifaces
-
-
-python /tmp/iface-choice.py "$@"
-iface=$(<~/.honey_iface)
-
 
 # Move SSH server from Port 22 to Port 54321
+echo '[sshd] Moving Port...'
 sudo sed -i 's:Port 22:Port 54321:g' /etc/ssh/sshd_config
 sudo service ssh reload
 
@@ -84,14 +65,8 @@ sudo mkdir -p /var/dionaea/log
 sudo mkdir -p /var/dionaea/bistreams
 sudo chown -R nobody:nogroup /var/dionaea/
 
-#edit config
-#note that we try and strip :0 and the like from interface here
-sudo sed -i "s|%%IFACE%%|${iface%:*}|g" /etc/dionaea/dionaea.conf
 
 ## install kippo - we want the latest so we have to grab the source ##
-
-#kippo dependencies
-sudo apt-get install -y subversion python-dev openssl python-openssl python-pyasn1 python-twisted iptables
 
 #install kippo to /opt/kippo
 echo '[apt-get] Installing subversion python-dev openssl python-openssl python-pyasn1 python-twisted iptables'
@@ -124,21 +99,19 @@ sudo chown -R kippo:kippo /var/run/kippo/
 sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 2222
 
 #persist iptables config
-sudo iptables-save > /etc/iptables.rules
+sudo iptables-save | sudo tee -a /etc/iptables.up.rules
 
 #setup iptables restore script
-sudo echo '#!/bin/sh' >> /etc/network/if-up.d/iptablesload
-sudo echo 'iptables-restore < /etc/iptables.rules' >> /etc/network/if-up.d/iptablesload
-sudo echo 'exit 0' >> /etc/network/if-up.d/iptablesload
+sudo echo '#!/bin/sh' | sudo tee /etc/network/if-up.d/iptablesload
+sudo echo 'iptables-restore < /etc/iptables.rules' | sudo tee -a /etc/network/if-up.d/iptablesload
+sudo echo 'exit 0' | sudo tee -a /etc/network/if-up.d/iptablesload
 #enable restore script
 sudo chmod +x /etc/network/if-up.d/iptablesload
 
 #download init files and install them
-sudo wget $wget_url/$script_dir/templates/p0f.init.tmpl -O /etc/init.d/p0f
-sudo sed -i "s|%%IFACE%%|$iface|g" /etc/init.d/p0f
-
-sudo wget $wget_url/$script_dir/init/dionaea -O /etc/init.d/dionaea
-sudo wget $wget_url/$script_dir/init/kippo -O /etc/init.d/kippo
+sudo cp ~/$script_dir/templates/p0f.init.tmpl /etc/init.d/p0f
+sudo cp ~/$script_dir/init/dionaea /etc/init.d/dionaea
+sudo cp ~/$script_dir/init/kippo /etc/init.d/kippo
 
 #install system services
 sudo chmod +x /etc/init.d/p0f
