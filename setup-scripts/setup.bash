@@ -59,11 +59,11 @@ sudo apt-get install -y dionaea-phibo
 } &> /dev/null
 
 #make directories
-sudo mkdir -p /var/dionaea/wwwroot
-sudo mkdir -p /var/dionaea/binaries
-sudo mkdir -p /var/dionaea/log
-sudo mkdir -p /var/dionaea/bistreams
-sudo chown -R nobody:nogroup /var/dionaea/
+sudo mkdir -p /var/lib/dionaea/wwwroot
+sudo mkdir -p /var/lib/dionaea/binaries
+sudo mkdir -p /var/lib/dionaea/log
+sudo mkdir -p /var/lib/dionaea/bistreams
+sudo chown -R nobody:nogroup /var/lib/dionaea/
 
 
 ## install kippo - we want the latest so we have to grab the source ##

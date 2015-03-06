@@ -1,14 +1,14 @@
 logging = {
 	default = {
 		// file not starting with / is taken relative to LOCALESTATEDIR (e.g. /opt/dionaea/var)
-		file = "/var/dionaea/log/dionaea.log"
+		file = "log/dionaea.log"
 		levels = "warning,error"
 		domains = "*"
     }
 
 	errors = {
 		// file not starting with / is taken relative to LOCALESTATEDIR (e.g. /opt/dionaea/var)
-		file = "/var/dionaea/log/dionaea-errors.log"
+		file = "log/dionaea-errors.log"
 		levels = "warning,error"
 		domains = "*"
 	}
@@ -466,6 +466,7 @@ modules = {
 			"virustotal",
 //			"mwserv",
 //			"submit_http",
+			"hpfeeds",
 //			"logxmpp",
 //			"nfq",
 			"p0f",
@@ -671,5 +672,3 @@ modules = {
 	}
  */
 }
-
-
