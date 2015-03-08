@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ## VIM TO ADD THESE BEFORE RUNNING ##
-kippodb = ""
-kippodbpw = ""
-kipponame = ""
+kippodb=""
+kippodbpw=""
+kipponame=""
 
 # Other Vars
 repo_dir="honeypot-scripts"
