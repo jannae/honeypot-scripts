@@ -1,4 +1,11 @@
 #!/bin/bash
+
+## VIM TO ADD THESE BEFORE RUNNING ##
+kippodb = ""
+kippodbpw = ""
+kipponame = ""
+
+# Other Vars
 repo_dir="honeypot-scripts"
 script_dir="honeypot-scripts/setup-scripts"
 
@@ -7,13 +14,13 @@ echo '[apt-get] Getting up to date'
 sudo apt-get update &> /dev/null
 sudo apt-get upgrade -y &> /dev/null
 
+echo '[apt-get] Installing all dependencies...'
+sudo apt-get -y install python-pip gcc python-dev openssl python-openssl python-pyasn1 python-twisted iptables unzip build-essential libmysqlclient-dev python-virtualenv python-pip python-mysqldb mysql-server openssl python-openssl python-pyasn1 python-twisted &> /dev/null
+
 echo 'Getting all the files arranged...'
 sudo mkdir /etc/dionaea
 sudo cp ~/$script_dir/templates/dionaea.conf.tmpl /etc/dionaea/dionaea.conf
 echo '[copied] /etc/dionaea/dionaea.conf'
-sudo cp ~/$script_dir/templates/kippo.cfg.tmpl /tmp/kippo.cfg
-echo '[copied] /tmp/kippo.cfg'
-
 
 if [ $(dpkg-query -W -f='${Status}' sudo 2>/dev/null | grep -c "ok installed") -eq 0 ]
 then
@@ -30,9 +37,6 @@ then
    exit 1
 fi
 
-echo '[apt-get] Installing python-pip gcc python-dev'
-sudo apt-get -y install python-pip gcc python-dev &> /dev/null
-
 # Move SSH server from Port 22 to Port 54321
 echo '[sshd] Moving Port...'
 sudo sed -i 's:Port 22:Port 54321:g' /etc/ssh/sshd_config
@@ -40,23 +44,28 @@ sudo service ssh reload
 
 
 ## install p0f ##
+
 echo '[apt-get] Installing p0f'
 sudo apt-get install -y p0f  &> /dev/null
 sudo mkdir /var/p0f/
 
 # dependency for add-apt-repository
-echo '[apt-get] Installing python-software-properties'
+echo '[apt-get] Installing python-software-properties (dependency for add-apt-repository)'
 sudo apt-get install -y python-software-properties &> /dev/null
 
 ## install dionaea ##
 
 #add dionaea repo
+echo '[apt-get] add-apt-repository -y ppa:honeynet/nightly'
 sudo add-apt-repository -y ppa:honeynet/nightly
 echo '[apt-get] Updating source list and installing dionaea-phibo'
 {
 sudo apt-get update
 sudo apt-get install -y dionaea-phibo
 } &> /dev/null
+
+#add dionaea user that can't login
+sudo useradd -r -s /bin/false dionaea
 
 #make directories
 sudo mkdir -p /var/lib/dionaea/wwwroot
@@ -68,14 +77,19 @@ sudo chown -R dionaea:dionaea /var/lib/dionaea/
 
 ## install kippo - we want the latest so we have to grab the source ##
 
-#install kippo to /opt/kippo
-echo '[apt-get] Installing subversion python-dev openssl python-openssl python-pyasn1 python-twisted iptables'
-sudo apt-get install -y subversion python-dev openssl python-openssl python-pyasn1 python-twisted iptables &> /dev/null
+echo '[pip] Installing kippo python deps (twisted zope.interface pycrypto pyasn1 MySQL-python)'
+sudo pip install twisted zope.interface pycrypto pyasn1 MySQL-python --upgrade
 
 #install kippo to /opt/kippo
 sudo mkdir /opt/kippo/
 sudo git clone https://github.com/micheloosterhof/kippo.git /opt/kippo/
-sudo cp /tmp/kippo.cfg /opt/kippo/
+sudo cp ~/$script_dir/templates/kippo.cfg.tmpl /opt/kippo/kippo.cfg
+echo '[copied] kippo.cfg'
+
+# Fixing kippo mysql reporting details
+sudo sed -i "s:myhostname:$kipponame:g" /opt/kippo/kippo.cfg
+sudo sed -i "s:kippodbpw:$kippodbpw:g" /opt/kippo/kippo.cfg
+sudo sed -i "s:kippodb:$kippodb:g" /opt/kippo/kippo.cfg
 
 #add kippo user that can't login
 sudo useradd -r -s /bin/false kippo
