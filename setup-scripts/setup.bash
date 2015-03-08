@@ -15,7 +15,7 @@ sudo apt-get update &> /dev/null
 sudo apt-get upgrade -y &> /dev/null
 
 echo '[apt-get] Installing all dependencies...'
-sudo apt-get -y install python-pip gcc python-dev openssl python-openssl python-pyasn1 python-twisted iptables unzip build-essential libmysqlclient-dev python-virtualenv python-pip python-mysqldb mysql-server openssl python-openssl python-pyasn1 python-twisted &> /dev/null
+sudo apt-get -y install python-pip gcc python-dev openssl python-openssl python-pyasn1 python-twisted iptables unzip build-essential libmysqlclient-dev python-virtualenv python-pip python-mysqldb openssl python-openssl python-pyasn1 python-twisted &> /dev/null
 
 echo 'Getting all the files arranged...'
 sudo mkdir /etc/dionaea
