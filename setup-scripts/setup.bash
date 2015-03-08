@@ -11,11 +11,11 @@ script_dir="honeypot-scripts/setup-scripts"
 
 # Get updated
 echo '[apt-get] Getting up to date'
-sudo apt-get update &> /dev/null
-sudo apt-get upgrade -y &> /dev/null
+sudo apt-get update
+sudo apt-get upgrade -y
 
 echo '[apt-get] Installing all dependencies...'
-sudo apt-get -y install python-pip gcc python-dev openssl python-openssl python-pyasn1 python-twisted iptables unzip build-essential libmysqlclient-dev python-virtualenv python-pip python-mysqldb openssl python-openssl python-pyasn1 python-twisted &> /dev/null
+sudo apt-get -y install python-pip gcc python-dev openssl python-openssl python-pyasn1 python-twisted iptables unzip build-essential libmysqlclient-dev python-virtualenv python-pip python-mysqldb openssl python-openssl python-pyasn1 python-twisted
 
 echo 'Getting all the files arranged...'
 sudo mkdir /etc/dionaea
@@ -46,12 +46,12 @@ sudo service ssh reload
 ## install p0f ##
 
 echo '[apt-get] Installing p0f'
-sudo apt-get install -y p0f  &> /dev/null
+sudo apt-get install -y p0f
 sudo mkdir /var/p0f/
 
 # dependency for add-apt-repository
 echo '[apt-get] Installing python-software-properties (dependency for add-apt-repository)'
-sudo apt-get install -y python-software-properties &> /dev/null
+sudo apt-get install -y python-software-properties
 
 ## install dionaea ##
 
