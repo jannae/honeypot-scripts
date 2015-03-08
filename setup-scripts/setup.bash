@@ -63,7 +63,7 @@ sudo mkdir -p /var/lib/dionaea/wwwroot
 sudo mkdir -p /var/lib/dionaea/binaries
 sudo mkdir -p /var/lib/dionaea/log
 sudo mkdir -p /var/lib/dionaea/bistreams
-sudo chown -R nobody:nogroup /var/lib/dionaea/
+sudo chown -R dionaea:dionaea /var/lib/dionaea/
 
 
 ## install kippo - we want the latest so we have to grab the source ##
